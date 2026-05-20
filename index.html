@@ -23,15 +23,15 @@
     const { useState } = React;
 
     const positions = [
-      { id: "P",  name: "Pitcher",      number: 1, x: 50, y: 52, description: "The pitcher throws the ball to the batter. In softball, pitchers throw underhand!", emoji: "🥎", color: "#FF6B6B" },
-      { id: "C",  name: "Catcher",      number: 2, x: 50, y: 82, description: "The catcher squats behind home plate and catches pitches. They wear a helmet, chest protector, and shin guards.", emoji: "🧤", color: "#FF9F43" },
-      { id: "1B", name: "First Base",   number: 3, x: 72, y: 62, description: "First base is on the right side of the field. The first baseman catches throws to get batters out!", emoji: "1️⃣", color: "#FECA57" },
-      { id: "2B", name: "Second Base",  number: 4, x: 62, y: 42, description: "Second base is in the middle of the diamond. The second baseman covers the bag and the right side of the infield.", emoji: "2️⃣", color: "#48DBFB" },
-      { id: "3B", name: "Third Base",   number: 5, x: 28, y: 62, description: "Third base is on the left side. It's called the 'hot corner' because hard hits come fast!", emoji: "3️⃣", color: "#FF9FF3" },
-      { id: "SS", name: "Shortstop",    number: 6, x: 38, y: 42, description: "The shortstop plays between second and third base. It's one of the busiest positions on the field!", emoji: "⚡", color: "#54A0FF" },
-      { id: "LF", name: "Left Field",   number: 7, x: 22, y: 22, description: "The left fielder covers the left side of the outfield and catches fly balls hit in that direction.", emoji: "🌿", color: "#5F27CD" },
-      { id: "CF", name: "Center Field", number: 8, x: 50, y: 12, description: "The center fielder covers the middle of the outfield. They're usually the fastest outfielder!", emoji: "🏃", color: "#00D2D3" },
-      { id: "RF", name: "Right Field",  number: 9, x: 78, y: 22, description: "The right fielder covers the right side of the outfield. They need a strong arm to throw to third base!", emoji: "💪", color: "#FF6B6B" },
+      { id: "P",  name: "Pitcher",      number: 1, x: 50, y: 52, description: "The pitcher throws the ball to the batter. In softball, pitchers throw underhand!", duties: ["Field balls hit near you.", "Throw to 1st base for the most common out.", "Throw home if a runner is trying to score.", "Back up your teammates when you are not fielding."], emoji: "🥎", color: "#FF6B6B" },
+      { id: "C",  name: "Catcher",      number: 2, x: 50, y: 82, description: "The catcher squats behind home plate and catches pitches. They wear a helmet, chest protector, and shin guards.", duties: ["Catch pitches and block balls in the dirt.", "Tag runners at home plate.", "Throw to 2nd or 3rd if a runner is stealing.", "Call out where your teammates should throw."], emoji: "🧤", color: "#FF9F43" },
+      { id: "1B", name: "First Base",   number: 3, x: 72, y: 62, description: "First base is on the right side of the field. The first baseman catches throws to get batters out!", duties: ["Catch throws from your teammates to get outs at 1st.", "If you field the ball, step on 1st base if you can reach it.", "Throw to 2nd if there is a force out there.", "Tag the runner if they are close to you."], emoji: "1️⃣", color: "#FECA57" },
+      { id: "2B", name: "Second Base",  number: 4, x: 62, y: 42, description: "Second base is in the middle of the diamond. The second baseman covers the bag and the right side of the infield.", duties: ["Field balls on the right side of the infield.", "Throw to 1st base for the most common out.", "Cover 2nd base and step on it for a force out.", "Tag runners trying to reach 2nd."], emoji: "2️⃣", color: "#48DBFB" },
+      { id: "3B", name: "Third Base",   number: 5, x: 28, y: 62, description: "Third base is on the left side. It's called the 'hot corner' because hard hits come fast!", duties: ["Field balls hit near 3rd base.", "Throw to 1st base for the most common out.", "Throw to 2nd if there is a force out there.", "Step on 3rd if there is a force out there.", "Throw home if a runner is trying to score."], emoji: "3️⃣", color: "#FF9FF3" },
+      { id: "SS", name: "Shortstop",    number: 6, x: 38, y: 42, description: "The shortstop plays between second and third base. It's one of the busiest positions on the field!", duties: ["Field balls in the middle and left side of the infield.", "Throw to 1st base for the most common out.", "Cover 2nd base on many plays — step on it or tag the runner.", "Throw to 2nd if there is a force out there."], emoji: "⚡", color: "#54A0FF" },
+      { id: "LF", name: "Left Field",   number: 7, x: 22, y: 22, description: "The left fielder covers the left side of the outfield and catches fly balls hit in that direction.", duties: ["Stop the ball — that is your first job.", "Throw to 2nd to keep the batter from taking an extra base.", "Throw to 3rd or home if a runner is heading there.", "Back up 3rd base on throws."], emoji: "🌿", color: "#5F27CD" },
+      { id: "CF", name: "Center Field", number: 8, x: 50, y: 12, description: "The center fielder covers the middle of the outfield. They're usually the fastest outfielder!", duties: ["Catch fly balls and stop ground balls.", "Throw to 2nd most of the time.", "Throw to 3rd or home if runners are moving.", "Back up left field and right field."], emoji: "🏃", color: "#00D2D3" },
+      { id: "RF", name: "Right Field",  number: 9, x: 78, y: 22, description: "The right fielder covers the right side of the outfield. They need a strong arm to throw to third base!", duties: ["Stop the ball — that is your first job.", "Throw to 2nd to stop the batter from taking an extra base.", "Throw to 1st if there is a chance to get the runner out.", "Back up 1st base on every infield throw.", "Throw to 3rd or home if a runner is heading there."], emoji: "💪", color: "#FF6B6B" },
     ];
 
     function SoftballPositions() {
@@ -180,7 +180,10 @@
                     <div style={{ fontSize: "12px", opacity: 0.7 }}>Position #{selected.number} · {selected.id}</div>
                   </div>
                 </div>
-                <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5", opacity: 0.9 }}>{selected.description}</p>
+                <p style={{ margin: "0 0 10px", fontSize: "14px", lineHeight: "1.5", opacity: 0.9 }}>{selected.description}</p>
+                <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13px", lineHeight: "1.8", opacity: 0.85 }}>
+                  {selected.duties.map((d, i) => <li key={i}>{d}</li>)}
+                </ul>
               </div>
             )}
 
@@ -194,7 +197,10 @@
                     <div style={{ fontSize: "11px", opacity: 0.7 }}>Position #{quizTarget.number}</div>
                   </div>
                 </div>
-                <p style={{ margin: 0, fontSize: "13px", lineHeight: "1.5", opacity: 0.85 }}>{quizTarget.description}</p>
+                <p style={{ margin: "0 0 8px", fontSize: "13px", lineHeight: "1.5", opacity: 0.85 }}>{quizTarget.description}</p>
+                <ul style={{ margin: 0, paddingLeft: "16px", fontSize: "12px", lineHeight: "1.8", opacity: 0.8 }}>
+                  {quizTarget.duties.map((d, i) => <li key={i}>{d}</li>)}
+                </ul>
               </div>
             )}
 

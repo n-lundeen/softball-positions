@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Softball Positions!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1a1a2e; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const positions = [
+      { id: "P",  name: "Pitcher",      number: 1, x: 50, y: 52, description: "The pitcher throws the ball to the batter. In softball, pitchers throw underhand!", emoji: "🥎", color: "#FF6B6B" },
+      { id: "C",  name: "Catcher",      number: 2, x: 50, y: 82, description: "The catcher squats behind home plate and catches pitches. They wear a helmet, chest protector, and shin guards.", emoji: "🧤", color: "#FF9F43" },
+      { id: "1B", name: "First Base",   number: 3, x: 72, y: 62, description: "First base is on the right side of the field. The first baseman catches throws to get batters out!", emoji: "1️⃣", color: "#FECA57" },
+      { id: "2B", name: "Second Base",  number: 4, x: 62, y: 42, description: "Second base is in the middle of the diamond. The second baseman covers the bag and the right side of the infield.", emoji: "2️⃣", color: "#48DBFB" },
+      { id: "3B", name: "Third Base",   number: 5, x: 28, y: 62, description: "Third base is on the left side. It's called the 'hot corner' because hard hits come fast!", emoji: "3️⃣", color: "#FF9FF3" },
+      { id: "SS", name: "Shortstop",    number: 6, x: 38, y: 42, description: "The shortstop plays between second and third base. It's one of the busiest positions on the field!", emoji: "⚡", color: "#54A0FF" },
+      { id: "LF", name: "Left Field",   number: 7, x: 22, y: 22, description: "The left fielder covers the left side of the outfield and catches fly balls hit in that direction.", emoji: "🌿", color: "#5F27CD" },
+      { id: "CF", name: "Center Field", number: 8, x: 50, y: 12, description: "The center fielder covers the middle of the outfield. They're usually the fastest outfielder!", emoji: "🏃", color: "#00D2D3" },
+      { id: "RF", name: "Right Field",  number: 9, x: 78, y: 22, description: "The right fielder covers the right side of the outfield. They need a strong arm to throw to third base!", emoji: "💪", color: "#FF6B6B" },
+    ];
+
+    function SoftballPositions() {
+      const [selected, setSelected] = useState(null);
+      const [quizMode, setQuizMode] = useState(false);
+      const [quizTarget, setQuizTarget] = useState(null);
+      const [quizResult, setQuizResult] = useState(null);
+      const [score, setScore] = useState({ correct: 0, total: 0 });
+
+      const startQuiz = () => {
+        setQuizMode(true);
+        setQuizResult(null);
+        setSelected(null);
+        setQuizTarget(positions[Math.floor(Math.random() * positions.length)]);
+      };
+
+      const handleClick = (pos) => {
+        if (quizMode && quizTarget) {
+          const correct = pos.id === quizTarget.id;
+          setQuizResult({ correct, clicked: pos });
+          setScore(s => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
+          setSelected(pos);
+        } else {
+          setSelected(pos === selected ? null : pos);
+        }
+      };
+
+      const nextQuiz = () => {
+        setQuizResult(null);
+        setSelected(null);
+        setQuizTarget(positions[Math.floor(Math.random() * positions.length)]);
+      };
+
+      const exitQuiz = () => {
+        setQuizMode(false);
+        setQuizTarget(null);
+        setQuizResult(null);
+        setSelected(null);
+      };
+
+      return (
+        <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)", display: "flex", flexDirection: "column", alignItems: "center", padding: "16px", fontFamily: "'Fredoka One', 'Nunito', cursive, sans-serif" }}>
+
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: "12px" }}>
+            <h1 style={{ color: "#FFD700", fontSize: "clamp(22px, 5vw, 36px)", margin: 0, textShadow: "0 0 20px rgba(255,215,0,0.5)", letterSpacing: "1px" }}>
+              ⚾ Softball Positions!
+            </h1>
+            <p style={{ color: "#a0c4ff", margin: "4px 0 0", fontSize: "14px" }}>
+              {quizMode ? "Quiz Mode 🧠" : "Tap a player to learn their position"}
+            </p>
+          </div>
+
+          {/* Score + Buttons */}
+          <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", justifyContent: "center" }}>
+            {!quizMode ? (
+              <button onClick={startQuiz} style={{ background: "linear-gradient(135deg, #f7971e, #ffd200)", border: "none", borderRadius: "20px", padding: "8px 20px", fontFamily: "'Fredoka One', cursive", fontSize: "15px", color: "#1a1a2e", cursor: "pointer", boxShadow: "0 4px 15px rgba(255,210,0,0.4)" }}>
+                🧠 Quiz Me!
+              </button>
+            ) : (
+              <>
+                <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: "20px", padding: "6px 16px", color: "#FFD700", fontSize: "15px" }}>
+                  ✅ {score.correct} / {score.total}
+                </div>
+                <button onClick={exitQuiz} style={{ background: "rgba(255,100,100,0.3)", border: "1px solid rgba(255,100,100,0.5)", borderRadius: "20px", padding: "6px 14px", fontFamily: "'Fredoka One', cursive", fontSize: "14px", color: "#fff", cursor: "pointer" }}>
+                  ✕ Exit Quiz
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Quiz prompt */}
+          {quizMode && quizTarget && !quizResult && (
+            <div style={{ background: "linear-gradient(135deg, rgba(84,160,255,0.2), rgba(95,39,205,0.2))", border: "2px solid rgba(84,160,255,0.5)", borderRadius: "16px", padding: "12px 24px", marginBottom: "12px", textAlign: "center", color: "#fff", fontSize: "18px" }}>
+              Tap the <span style={{ color: "#FFD700", fontWeight: "bold" }}>{quizTarget.name}</span>!
+            </div>
+          )}
+
+          {/* Quiz result */}
+          {quizResult && (
+            <div style={{ background: quizResult.correct ? "linear-gradient(135deg, rgba(0,210,211,0.2), rgba(72,219,251,0.2))" : "linear-gradient(135deg, rgba(255,107,107,0.2), rgba(255,100,50,0.2))", border: `2px solid ${quizResult.correct ? "rgba(72,219,251,0.6)" : "rgba(255,107,107,0.6)"}`, borderRadius: "16px", padding: "12px 24px", marginBottom: "12px", textAlign: "center", color: "#fff", fontSize: "16px", maxWidth: "340px" }}>
+              <div style={{ fontSize: "28px" }}>{quizResult.correct ? "🎉" : "😅"}</div>
+              <div style={{ fontWeight: "bold", fontSize: "18px" }}>{quizResult.correct ? "Great job!" : `That's ${quizResult.clicked.name}`}</div>
+              {!quizResult.correct && <div style={{ fontSize: "13px", opacity: 0.85, marginTop: "4px" }}>The {quizTarget.name} is highlighted in yellow</div>}
+              <button onClick={nextQuiz} style={{ marginTop: "8px", background: "linear-gradient(135deg, #f7971e, #ffd200)", border: "none", borderRadius: "20px", padding: "7px 18px", fontFamily: "'Fredoka One', cursive", fontSize: "14px", color: "#1a1a2e", cursor: "pointer" }}>
+                Next Question →
+              </button>
+            </div>
+          )}
+
+          {/* Field + Info */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", width: "100%", maxWidth: "500px" }}>
+
+            {/* Field */}
+            <div style={{ width: "100%", aspectRatio: "1", position: "relative", borderRadius: "50% 50% 8px 8px", overflow: "hidden", background: "radial-gradient(ellipse at 50% 95%, #2d5a1b 0%, #1e3d12 40%, #152c0d 100%)", boxShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 0 40px rgba(0,0,0,0.3)", border: "3px solid rgba(255,255,255,0.1)" }}>
+
+              {/* Grass stripes */}
+              {[...Array(8)].map((_, i) => (
+                <div key={i} style={{ position: "absolute", top: 0, bottom: 0, left: `${i * 12.5}%`, width: "12.5%", background: i % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent" }} />
+              ))}
+
+              {/* Infield dirt */}
+              <div style={{ position: "absolute", left: "50%", top: "55%", transform: "translate(-50%, -50%) rotate(45deg)", width: "38%", height: "38%", background: "radial-gradient(ellipse, #c8a882 0%, #b8946e 60%, #a07856 100%)", boxShadow: "inset 0 0 20px rgba(0,0,0,0.3)" }} />
+
+              {/* Pitcher's mound */}
+              <div style={{ position: "absolute", left: "50%", top: "52%", transform: "translate(-50%, -50%)", width: "7%", height: "7%", borderRadius: "50%", background: "radial-gradient(circle, #d4b896, #b8946e)", boxShadow: "0 2px 4px rgba(0,0,0,0.3)" }} />
+
+              {/* Bases */}
+              {[
+                { x: 50, y: 82, isHome: true },
+                { x: 72, y: 62, isHome: false },
+                { x: 50, y: 42, isHome: false },
+                { x: 28, y: 62, isHome: false },
+              ].map(({ x, y, isHome }, i) => (
+                <div key={i} style={{ position: "absolute", left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" + (isHome ? "" : " rotate(45deg)"), width: isHome ? "28px" : "18px", height: isHome ? "28px" : "18px", background: "rgba(255,255,255,0.9)", borderRadius: isHome ? "4px 4px 0 0" : "2px", boxShadow: "0 2px 6px rgba(0,0,0,0.4)", zIndex: 1 }} />
+              ))}
+
+              {/* Foul lines + arc */}
+              <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+                <line x1="50%" y1="83%" x2="0%" y2="0%" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                <line x1="50%" y1="83%" x2="100%" y2="0%" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
+                <path d="M 5% 50% Q 50% -10% 95% 50%" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" fill="none" />
+              </svg>
+
+              {/* Position buttons */}
+              {positions.map((pos) => {
+                const isSelected = selected?.id === pos.id;
+                const isQuizTarget = quizMode && quizResult && quizTarget?.id === pos.id;
+                const isWrongClick = quizResult && !quizResult.correct && selected?.id === pos.id;
+                return (
+                  <button key={pos.id} onClick={() => handleClick(pos)} style={{ position: "absolute", left: `${pos.x}%`, top: `${pos.y}%`, transform: "translate(-50%, -50%)", width: isSelected ? "52px" : "44px", height: isSelected ? "52px" : "44px", borderRadius: "50%", background: isQuizTarget ? "linear-gradient(135deg, #FFD700, #f7971e)" : isWrongClick ? "linear-gradient(135deg, #ff4757, #ff6b6b)" : isSelected ? `linear-gradient(135deg, ${pos.color}, ${pos.color}bb)` : `linear-gradient(135deg, ${pos.color}cc, ${pos.color}88)`, border: `3px solid ${isQuizTarget ? "#FFD700" : isSelected ? "white" : "rgba(255,255,255,0.3)"}`, cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", boxShadow: isSelected ? `0 0 20px ${pos.color}, 0 4px 12px rgba(0,0,0,0.4)` : "0 3px 8px rgba(0,0,0,0.4)", transition: "all 0.2s ease", zIndex: isSelected ? 10 : 2, padding: 0 }}>
+                    <span style={{ fontSize: "13px", lineHeight: 1 }}>{pos.emoji}</span>
+                    <span style={{ fontSize: "9px", color: "white", fontWeight: "bold", fontFamily: "'Fredoka One', cursive" }}>{pos.id}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Info card - learn mode */}
+            {selected && !quizMode && (
+              <div style={{ width: "100%", background: `linear-gradient(135deg, ${selected.color}22, ${selected.color}11)`, border: `2px solid ${selected.color}66`, borderRadius: "20px", padding: "16px 20px", color: "white", animation: "fadeIn 0.2s ease" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+                  <span style={{ fontSize: "36px" }}>{selected.emoji}</span>
+                  <div>
+                    <div style={{ fontSize: "22px", fontWeight: "bold", color: selected.color }}>{selected.name}</div>
+                    <div style={{ fontSize: "12px", opacity: 0.7 }}>Position #{selected.number} · {selected.id}</div>
+                  </div>
+                </div>
+                <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5", opacity: 0.9 }}>{selected.description}</p>
+              </div>
+            )}
+
+            {/* Info card - quiz result */}
+            {selected && quizMode && quizResult && (
+              <div style={{ width: "100%", background: `linear-gradient(135deg, ${quizTarget.color}22, ${quizTarget.color}11)`, border: `2px solid ${quizTarget.color}44`, borderRadius: "20px", padding: "14px 18px", color: "white" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+                  <span style={{ fontSize: "30px" }}>{quizTarget.emoji}</span>
+                  <div>
+                    <div style={{ fontSize: "18px", fontWeight: "bold", color: "#FFD700" }}>{quizTarget.name}</div>
+                    <div style={{ fontSize: "11px", opacity: 0.7 }}>Position #{quizTarget.number}</div>
+                  </div>
+                </div>
+                <p style={{ margin: 0, fontSize: "13px", lineHeight: "1.5", opacity: 0.85 }}>{quizTarget.description}</p>
+              </div>
+            )}
+
+            {/* Legend */}
+            {!quizMode && !selected && (
+              <div style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "6px" }}>
+                {positions.map((pos) => (
+                  <button key={pos.id} onClick={() => handleClick(pos)} style={{ background: `${pos.color}22`, border: `1px solid ${pos.color}55`, borderRadius: "10px", padding: "6px 8px", color: "white", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px", textAlign: "left", fontFamily: "'Nunito', sans-serif" }}>
+                    <span style={{ fontSize: "16px" }}>{pos.emoji}</span>
+                    <div>
+                      <div style={{ fontSize: "11px", fontWeight: "700", color: pos.color }}>{pos.id}</div>
+                      <div style={{ fontSize: "10px", opacity: 0.8 }}>{pos.name}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<SoftballPositions />);
+  </script>
+</body>
+</html>
